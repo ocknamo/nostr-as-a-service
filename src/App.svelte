@@ -57,11 +57,6 @@
   ];
   let sub: Sub;
 
-  onDestroy(() => {
-    sub.unsub();
-    pool.close(relays);
-  });
-
   async function onclick() {
     nip07 = !!(window as Window).nostr;    
 
@@ -105,7 +100,12 @@
 
     // cooling time
     // FIXME: We can request when update input.
-    setTimeout(() => disabled=false, 5000);
+    setTimeout(() => {
+      disabled=false;
+      // TODO: reuse pool.
+      sub.unsub();
+      pool.close(relays);
+    }, 5000);
   }
 </script>
 
