@@ -22,6 +22,9 @@
   }
 
   // constants
+  // hash tag
+  const signMessage = 'from NaaS'
+
   // yabumi chan id
   const yabumiHexPub =
     "3aa38bf663b6c834a04a6542edf14a81d3223e050c3cc9b7479f8c869c432cf2";
@@ -82,7 +85,7 @@
 
   function onclick() {
     disabled = true;
-    const message = `nostr:${yabumiNpub} dice ${diceNum}d${sideNum}`;
+    const message = `nostr:${yabumiNpub} dice ${diceNum}d${sideNum} \n${signMessage}`;
 
     /**
      * Prepare event.
