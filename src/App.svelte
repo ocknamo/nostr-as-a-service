@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte";
+  import { onMount, onDestroy, tick } from "svelte";
   import Button from "@smui/button";
   import Textfield from "@smui/textfield";
   import Card from "@smui/card";
@@ -16,8 +16,8 @@
   // nip07 types
   interface Window {
     nostr?: {
-      getPublicKey: () => string;
-      signEvent: (event: UnsignedEvent) => Event;
+      getPublicKey: () => Promise<string>;
+      signEvent: (event: UnsignedEvent) => Promise<Event>;
     };
   }
 
@@ -57,12 +57,17 @@
   ];
   let sub: Sub;
 
-  onMount(() => {
-    nip07 = !!(window as Window).nostr;
+  onDestroy(() => {
+    sub.unsub();
+    pool.close(relays);
+  });
+
+  async function onclick() {
+    nip07 = !!(window as Window).nostr;    
 
     // Generate key
     sk = nip07 ? "" : generatePrivateKey();
-    pk = nip07 ? (window as Window).nostr.getPublicKey() : getPublicKey(sk);
+    pk = nip07 ? await (window as Window).nostr.getPublicKey() : getPublicKey(sk);
 
     // in onClick
     sub = pool.sub(relays, [
@@ -76,14 +81,7 @@
     sub.on("event", (event) => {
       reply = event.content;
     });
-  });
 
-  onDestroy(() => {
-    sub.unsub();
-    pool.close(relays);
-  });
-
-  function onclick() {
     disabled = true;
     const message = `nostr:${yabumiNpub} dice ${diceNum}d${sideNum} \n${signMessage}`;
 
@@ -99,7 +97,7 @@
     };
 
     const event = nip07
-      ? (window as Window).nostr.signEvent(unsignedEvent)
+      ? await (window as Window).nostr.signEvent(unsignedEvent)
       : finishEvent(unsignedEvent, sk);
 
     // Request to bot
