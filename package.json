@@ -12,6 +12,7 @@
   },
   "devDependencies": {
     "@smui/button": "^7.0.0-beta.8",
+    "@smui/fab": "^7.0.0-beta.9",
     "@smui/textfield": "^7.0.0-beta.8",
     "@sveltejs/vite-plugin-svelte": "^2.0.4",
     "@tsconfig/svelte": "^4.0.1",

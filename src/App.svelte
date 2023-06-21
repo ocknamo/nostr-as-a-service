@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { onMount, onDestroy, tick } from "svelte";
   import Button from "@smui/button";
   import Textfield from "@smui/textfield";
   import Card from "@smui/card";
+  import Fab, { Icon, Label } from "@smui/fab";
   import {
     finishEvent,
     generatePrivateKey,
@@ -23,7 +23,7 @@
 
   // constants
   // hash tag
-  const signMessage = 'from NaaS'
+  const signMessage = "from NaaS";
 
   // yabumi chan id
   const yabumiHexPub =
@@ -35,8 +35,8 @@
   let diceNum = null;
   let sideNum = null;
 
-    // button
-  $: disabled = !diceNum || !sideNum; 
+  // button
+  $: disabled = !diceNum || !sideNum;
 
   // Bot reply
   let reply = "...waiting";
@@ -58,11 +58,13 @@
   let sub: Sub;
 
   async function onclick() {
-    nip07 = !!(window as Window).nostr;    
+    nip07 = !!(window as Window).nostr;
 
     // Generate key
     sk = nip07 ? "" : generatePrivateKey();
-    pk = nip07 ? await (window as Window).nostr.getPublicKey() : getPublicKey(sk);
+    pk = nip07
+      ? await (window as Window).nostr.getPublicKey()
+      : getPublicKey(sk);
 
     // in onClick
     sub = pool.sub(relays, [
@@ -101,7 +103,7 @@
     // cooling time
     // FIXME: We can request when update input.
     setTimeout(() => {
-      disabled=false;
+      disabled = false;
       // TODO: reuse pool.
       sub.unsub();
       pool.close(relays);
@@ -110,28 +112,47 @@
 </script>
 
 <link
+  href="https://fonts.googleapis.com/css2?family=Material+Icons&Roboto+Mono:ital@0;1&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+  rel="stylesheet"
+/>
+<link
   rel="stylesheet"
   href="https://cdn.jsdelivr.net/npm/svelte-material-ui@6.0.0/bare.min.css"
 />
 <main>
-  <div class="card-container message"><Card class="message-card" padded>{reply}</Card></div>
+  <Fab extended>
+    <Icon class="material-icons">favorite</Icon>
+    <Label>823chan/Dice</Label>
+  </Fab>
+  <div class="top-space" />
+  <div class="input-flex-container">
+    <div class="card-container"><Card padded>{reply}</Card></div>
+  </div>
+
   <!-- dice number -->
-  <Textfield
-    type="number"
-    variant="outlined"
-    bind:value={diceNum}
-    label="Dice number"
-  />
-  <!-- sides of the dice -->
-  <Textfield
-    type="number"
-    variant="outlined"
-    bind:value={sideNum}
-    label="Sides number"
-  />
-  <Button variant="raised" on:click={onclick} {disabled}>
-    Submit
-  </Button>
+  <div class="input-flex-container">
+    <div class="text-input-container">
+      <Textfield
+        type="number"
+        variant="outlined"
+        bind:value={diceNum}
+        label="Dice number"
+        class="text-input"
+      />
+    </div>
+
+    <!-- sides of the dice -->
+    <div class="text-input-container">
+      <Textfield
+        type="number"
+        variant="outlined"
+        bind:value={sideNum}
+        label="Sides number"
+      />
+    </div>
+  </div>
+
+  <Button variant="raised" on:click={onclick} {disabled}>Submit</Button>
   <p>
     サイコロの数：{diceNum ?? ""}
   </p>
@@ -144,10 +165,30 @@
 </main>
 
 <style>
-  .card-container {
-    margin: 3em;
+  .top-space {
+    margin-top: 8em;
   }
-  .message {
-    color: rgba(0, 0, 0, .5);
+  @media screen and (max-height: 740px) {
+    .top-space {
+      margin-top: 2em;
+    }
+  }
+  .card-container {
+    margin: 4em;
+    width: 100%;
+    min-width: 200px;
+    max-width: 400px;
+    color: rgba(0, 0, 0, 0.5);
+  }
+  .input-flex-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+  .text-input-container {
+    margin: 0.5em;
+    max-width: fit-content;
+    min-width: 200px;
   }
 </style>
