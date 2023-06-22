@@ -159,9 +159,12 @@
   <p>
     サイコロの面の数：{sideNum ?? ""}
   </p>
+  <div class="input-flex-container">
   <p class="message">
     pubkey: {pk}
   </p>
+</div>
+
 </main>
 
 <style>
@@ -190,5 +193,11 @@
     margin: 0.5em;
     max-width: fit-content;
     min-width: 200px;
+  }
+  .message {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 300px;
   }
 </style>
