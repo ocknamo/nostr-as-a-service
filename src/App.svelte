@@ -120,9 +120,20 @@
   href="https://cdn.jsdelivr.net/npm/svelte-material-ui@6.0.0/bare.min.css"
 />
 <main>
-  <Fab extended>
-    <Icon class="material-icons">favorite</Icon>
-    <Label>823chan/Dice</Label>
+  <Fab extended style="height: 34px;font-size: 0.6em;width: auto;">
+    <Icon class="material-icons" style="margin-right: 4px;">casino</Icon>
+    <Label
+      >823chan/Dice<a
+        href={`https://nostter.vercel.app/${yabumiNpub}`}
+        target="”_blank”"
+        rel="noopener noreferrer"
+        ><Icon
+          class="material-icons"
+          style="font-size: 1em; margin: 0 0 0 4px;width: 10px;vertical-align: middle;"
+          >info</Icon
+        ></a
+      ></Label
+    >
   </Fab>
   <div class="top-space" />
   <div class="input-flex-container">
@@ -160,11 +171,10 @@
     サイコロの面の数：{sideNum ?? ""}
   </p>
   <div class="input-flex-container">
-  <p class="message">
-    pubkey: {pk}
-  </p>
-</div>
-
+    <p class="message">
+      pubkey: {pk}
+    </p>
+  </div>
 </main>
 
 <style>
